@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
 const {responseData, responseMessage} = require('../utils/response-handler');
+const getData = require('../controllers/book');
 
 //GET BOOK
 router.get('/book', (req,res)=>{
@@ -64,7 +65,7 @@ router.delete('/book/:id', (req,res)=>{
     const id = req.params.id;
     db.query(`DELETE FROM books WHERE id = ${id} `, function(err, result){
         if(err) throw err
-        responseMessage(res, 200, 'Berhasil menghapus data');
+        responseMessage(res, 200, 'Berhasil menghapus data');   
     });
 });
 module.exports = router
