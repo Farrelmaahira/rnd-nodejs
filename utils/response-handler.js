@@ -1,7 +1,7 @@
-const responseData = (response, statusCode, values) =>{
+const responseData = (response, statusCode, values ) =>{
     let data = {
         success : true,
-        data : values
+        data : values,
     };
 
     response.status(statusCode).json(data);
@@ -17,4 +17,13 @@ const responseMessage = (response, statusCode, message) => {
     response.end();
 }
 
-module.exports = { responseData, responseMessage }
+const responseError = (response, statusCode, message) => {
+    let data = {
+        success : false,
+        message : message
+    };
+    response.status(statusCode).json(data);
+    response.end();
+}
+
+module.exports = { responseData, responseMessage, responseError }
