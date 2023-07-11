@@ -1,9 +1,12 @@
-const Cat = require('../models/categoryModel');
+// const Cat = require('../models/categoryModel');
+const { Book , Category } = require('../models');
+
 const { responseData, responseMessage, responseError } = require('../utils/response-handler');
+
 //GET ALL CATEGORY
 exports.getAll = async (req, res) => {
     try {
-        const data = await Cat.findAll();
+        const data = await Category.findAll();
         if (data == 0) {
             responseMessage(res, 404, 'Data Kosong');
             return;
@@ -11,14 +14,14 @@ exports.getAll = async (req, res) => {
         responseData(res, 200, data);
     } catch(err) {
         throw err
-        return;
+        
     }
 }
 //POST NEW CATEGORY
 exports.postData = async (req, res) => {
     try {
-        const data = await Cat.create({
-            cat_name: req.body.cat_name
+        const data = await Category.create({
+            category : req.body.cat_name
         });
         responseData(res, 200, data);
     } catch (error) {
@@ -29,7 +32,7 @@ exports.postData = async (req, res) => {
 exports.getById = async (req, res) => {
     let id = req.params.id;
     try {
-        const data = await Cat.findByPk(id);
+        const data = await Category.findByPk(id);
         if(data === null) {
             responseMessage(res, 404, 'Data tidak ditemukan');
             return;
@@ -43,7 +46,7 @@ exports.getById = async (req, res) => {
 exports.updateData = async (req, res) => {
     let id = req.params.id;
     try {
-        const data = await Cat.update({
+        const data = await Category.update({
             cat_name: req.body.cat_name
         }, {
             where: {
@@ -60,7 +63,7 @@ exports.updateData = async (req, res) => {
 exports.deleteData = async (req,res) => {
     let id = req.params.id;
     try {
-        const data = await Cat.destroy({
+        const data = await Category.destroy({
             where : {
                 id : id
             }
@@ -76,3 +79,14 @@ exports.deleteData = async (req,res) => {
     } 
 }
 
+//GET CATEGORY WITH IT BOOKS
+exports.getCategoryWithBook = async (req,res) => {
+    let id = req.params.id;
+   const data = await Category.findByPk(id, {
+    include : [{
+        model : Book,
+        as : 'book'
+    }]
+   });
+   responseData(res, 200, data);
+}

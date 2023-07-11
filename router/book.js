@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {getData, postData, getById, updateData, deleteData} = require('../controllers/book');
+const {getData, postData, getById, updateData, deleteData, getCategoryBook} = require('../controllers/bookController');
 
 //GET BOOK
 router.get('/book', getData);
@@ -17,5 +17,5 @@ router.put('/book/:id', updateData);
 //DELETE BOOK
 router.delete('/book/:id', deleteData);
 
-router.get('/book/testing');
+router.get('/book/testing', getCategoryBook);
 module.exports = router
