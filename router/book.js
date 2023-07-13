@@ -2,10 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 
-const multer = require('multer');
-
-const upload = multer({dest : 'upload/'});
-
+const { upload } = require('../middleware/multer');
 
 const {getData, postData, getById, updateData, deleteData, removeCategory } = require('../controllers/bookController');
 
@@ -13,7 +10,7 @@ const {getData, postData, getById, updateData, deleteData, removeCategory } = re
 router.get('/book', getData);
 
 //POST BOOK
-router.post('/book', upload.single('files'), postData);
+router.post('/book', upload.single('file'), postData);
 
 //GET BOOK BY ID
 router.get('/book/:id', getById);

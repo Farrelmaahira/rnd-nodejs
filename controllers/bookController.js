@@ -21,12 +21,10 @@ exports.getData = async (req, res) => {
 exports.postData = async (req, res) => {
     const book = req.body.book;
     const catId = req.body.cat;
-    console.log(req.file);
-    return;
     try {
-
         const data = await Book.create({
-            book: book
+            book: book,
+            picture : req.file.originalname
         });
 
         await data.addCategories(catId);
@@ -34,7 +32,7 @@ exports.postData = async (req, res) => {
         responseData(res, 200, data);
 
     } catch (err) {
-        console.log(err);
+        responseError(res, 400, err.message);
     }
 }
 
@@ -55,7 +53,7 @@ exports.getById = async (req, res) => {
         if(data === null) {
             responseMessage(res,404, 'Data tidak ditemukan');
         }
-        responseData(res, 200, await data.getCategories());
+        responseData(res, 200, data);
     } catch (err) {
         console.log(err);
     }
@@ -64,7 +62,7 @@ exports.getById = async (req, res) => {
 //UPDATE BOOK
 exports.updateData = async (req, res) => {
     let book = req.body.book;
-    let catId = req.body.cat_id;
+    let catId = req.body.cat;
     let id = req.params.id;
     try {
         const data = await Book.findOne({
@@ -103,8 +101,7 @@ exports.deleteData = async (req, res) => {
                 as: 'categories'
             }]
         });
-
-        const catId = book.categories[0].id;
+        const catId = await book.getCategories(); 
         await book.removeCategories(catId);
         await book.destroy();
         responseData(res, 200, book);
@@ -117,7 +114,7 @@ exports.deleteData = async (req, res) => {
 //REMOVE CATEGORY
 exports.removeCategory = async (req,res) => {
     let id = req.params.id;
-    let catId = req.body.catId;
+    let catId = req.body.cat;
     try {
         console.log(catId);
         const data = await Book.findByPk(id);
