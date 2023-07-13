@@ -1,12 +1,19 @@
 const express = require('express');
+
 const router = express.Router();
-const {getData, postData, getById, updateData, deleteData, getCategoryBook} = require('../controllers/bookController');
+
+const multer = require('multer');
+
+const upload = multer({dest : 'upload/'});
+
+
+const {getData, postData, getById, updateData, deleteData, removeCategory } = require('../controllers/bookController');
 
 //GET BOOK
 router.get('/book', getData);
 
 //POST BOOK
-router.post('/book', postData);
+router.post('/book', upload.single('files'), postData);
 
 //GET BOOK BY ID
 router.get('/book/:id', getById);
@@ -17,5 +24,7 @@ router.put('/book/:id', updateData);
 //DELETE BOOK
 router.delete('/book/:id', deleteData);
 
-router.get('/book/testing', getCategoryBook);
+//REMOVE CATEGORY FROM BOOK
+router.delete('/book/:id/remove_category', removeCategory);
+
 module.exports = router

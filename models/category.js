@@ -10,9 +10,15 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
-      this.hasMany(models.Book, {
-        as : 'book'
+      this.belongsToMany(models.Book, {
+        through : 'category_book',
+        as : {
+          singular : 'book',
+          plural : 'books'
+        },
+        foreignKey : 'category_id',
+        onDelete : 'cascade',
+        onUpdate : 'cascade'
       });
     }
   }

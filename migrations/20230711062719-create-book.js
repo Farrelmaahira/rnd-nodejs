@@ -9,13 +9,13 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      categoryId : {
-        allowNull : false,
-        type : Sequelize.INTEGER,
-      },
       book: {
         type: Sequelize.STRING,
         allowNull : false
+      },
+      picture : {
+        allowNull : true,
+        type : Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -24,7 +24,7 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
-      }
+      },
     });
   },
   async down(queryInterface, Sequelize) {
