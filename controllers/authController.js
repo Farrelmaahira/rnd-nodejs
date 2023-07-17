@@ -1,10 +1,16 @@
 const bcrypt = require('bcrypt');
 
-const { Users, sequelize } = require('../models/index');
+const { Users } = require('../models/index');
 
 const Joi = require('joi');
 
 const { responseError, responseData } = require('../utils/response-handler');
+
+const jwt = require('jsonwebtoken');
+
+const passport = require('passport');
+
+const Localstrategy = require('passport-local').Strategy;
 
 var validate = (data, c) => {
     let schema;
@@ -27,6 +33,10 @@ var validate = (data, c) => {
     }
 }
 
+exports.pasSignup =  (req,res) => {
+    responseData(res, 200, res.user);
+}
+
 exports.userSignup = async (req, res) => {
     const dataValidate = {};
 
@@ -41,7 +51,6 @@ exports.userSignup = async (req, res) => {
     dataValidate.email = email;
 
     const val = validate(dataValidate, 'signup');
-
 
     try {
         if (val.error) throw val.error.details[0];
@@ -87,14 +96,36 @@ exports.userSignin = async (req, res) => {
 
         if (val.error) throw val.error.details[0];
 
-        const data = await Users.findByPk(email);
+        const data = await Users.findOne({
+            where : {
+                email : email
+            }
+        });
+
         if(!data) return  responseError(res, 400, 'Email atau password yang anda masukan salah');
 
         const compare = await bcrypt.compare(password, data.password);
         if(compare == false) {
+
             return responseError(res, 400, 'Email atau anda yang masukan salah');
+
         } else {
-            return responseData(res, 200, data);
+
+            const payload = {
+                id : data.id,
+                username : data.username,
+                email : data.email
+            }
+
+            const token = jwt.sign(payload, process.env.JWT_PRIVATE_KEY, {
+                expiresIn : 3600
+            });
+
+            const response = {
+                user : data,
+                token : token
+            }
+            return responseData(res, 200, response);
         }
 
     } catch (error) {

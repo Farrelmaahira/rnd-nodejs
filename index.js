@@ -14,12 +14,16 @@ const { responseMessage, responseError } = require('./utils/response-handler');
 
 const router = express.Router();
 
+const passport = require('passport');
+require('./auth/auth')(app);
 //APPLICATION LEVEL MIDDLEWARE
 const middleware = router.use(function(req,res,next){
     responseError(res, 404, '404 NOT FOUND!!');
     console.log('404 not found');
     next();
 });
+
+app.use(passport.initialize());
 
 app.use(bodyParser.json());
 
