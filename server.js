@@ -1,6 +1,9 @@
 const express = require('express');
+
 const app = require('./index'); 
-const db = require('./config/db');
+
+const db = require('./models/index');
+
 require('dotenv').config()
 
 app.listen(process.env.PORT, function(){

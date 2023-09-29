@@ -1,15 +1,27 @@
 const express = require('express');
+
+const app = express();
+
 const router = express.Router();
-const {getAll, postData, getById, updateData, deleteData} = require('../controllers/categoryController');
+
+const {getAll, postData, getById, updateData, deleteData, getCategoryWithBook} = require('../controllers/categoryController');
+
+const passport = require('passport');
+require('../auth/auth')(app);
 //GET ALL CATEGORY
-router.get('/category', getAll);
+router.get('/category',passport.authenticate('jwt', {session : false}), getAll);
 
-router.post('/category', postData);
+//POST CATEGORY
+router.post('/category', passport.authenticate('jwt', {session:false}), postData);
 
-router.get('/category/:id', getById);
+//GET CATEGORY BY ID
+router.get('/category/:id', passport.authenticate('jwt', {session : false}), getById);
 
-router.put('/category/:id', updateData);
+//UPDATE(EDIT) CATEGORY BY ID
+router.put('/category/:id', passport.authenticate('jwt', {session : false}), updateData);
 
-router.delete('/category/:id', deleteData);
+//DELETE CATEGORY BY ID
+router.delete('/category/:id', passport.authenticate('jwt', {session :false}), deleteData);
+
 
 module.exports = router;
