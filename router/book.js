@@ -12,7 +12,7 @@ const passport = require('passport');
 require('../auth/auth')(app);
 
 //GET BOOK
-router.get('/book', getData);
+router.get('/book', passport.authenticate('jwt', {session: false}), getData);
 
 //POST BOOK
 // router.post('/book', [upload.single('file'), passport.authenticate('jwt', {session : false})], postData);
